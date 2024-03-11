@@ -1,0 +1,2 @@
+January 31, 2023 - Searching viridiplantae in https://www.ncbi.nlm.nih.gov/sra results in RNA(438,655)
+Downloaded to runinfo.csv

@@ -1,0 +1,73 @@
+---
+title: "Step 01: Downloading RBIEN coordinate data from the server"
+author: "Alexa Tyszka"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Initialization
+First, we will prepare to download all the data that we might want from a subset of species from the main BIEN database. Open the BIEN package and set up a directory where we will be storing the files.
+
+
+```{r init, echo=FALSE}
+#install.packages("BIEN")
+library(BIEN)
+setwd("~/atyszka2@uic.edu - Google Drive/Shared drives/walker-lab-shared-drive/preservation_review_ast/04_data_procedure_for_submission/")
+
+```
+
+You may want multiple downloads, each of which should have a separate folder.
+```{r dircreate, eval=FALSE}
+download.dir.path <- paste(Sys.Date(), "-rbien-bulk-download", sep="")
+dir.create(download.dir.path)
+setwd(download.dir.path)
+getwd()
+```
+
+## Get a list of species of interest
+
+You may want to investigate a species or genus of interest. RBIEN provides many tools to investigate such questions. Or you may have a pre-existing vector of species, which you can load here. I'm investigating all species in the database, so here we get a record of all species.
+```{r getsp, eval=F}
+Blistall<-BIEN_list_all()
+```
+
+##Setting up download parameters
+
+```{r dlsetup}
+compiled_results <- NULL
+n <- 10 #species for each query, and how frequently your .csv file will be saved.
+#Lower numbers here will make it easier to troubleshoot but result in many files.
+m <- length(Blistall$species) #total number of species
+startnum <- 0 #which index we start at, could be useful if server run is interrupted
+```
+
+
+## Running the loop, and final notes
+This code was run on a lab computer running Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-39-generic x86_64), but could also be run for smaller jobs on lighter weight PCs. Adjusting ```m``` above is useful for test-runs, for example only taking 100 species initially. The ```.csv``` files will vary in size and some may be 0 bytes large, but this is just because there were no coordinate records for that species. Records may exist in other forms.
+
+```{r serverrun, eval = FALSE, echo=T}
+## try error handling is courtesy of https://stackoverflow.com/questions/31999808/retry-for-loop-r-loop-if-error
+for (x in seq(from=startnum, to=m, by=n)) {
+  checknum <- 0 # setup for retry error
+  message(x, " out of ", m, ", ",x/m ,"%") #print progress
+  queries <- na.omit(Blistall$species[x:(x+(n-1))]) #get queries from db
+  while(TRUE){ 
+    download_try <- try(results <- BIEN_occurrence_species(species = queries,observation.type=T), silent=TRUE)
+    if(is(download_try, 'try-error')){
+      message("WARNING! timeout on: ", x, "\t retry attempt:", checknum)
+      Sys.sleep(20)
+      checknum = checknum + 1
+    }
+    else{
+      break
+      }
+    }
+  write.csv(results, file=paste("rbien_coords_dec_14/rbien_dl_from_", x, ".csv", sep=""))
+}
+
+```
+
