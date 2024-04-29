@@ -1,3 +1,5 @@
 
 figure_01/01_download_sra_list/runinfo.csv
 figure_01/03_compile_species_observations/species_observations.csv.gz
+01_download_sra_list/runinfo.csv
+03_compile_species_observations/species_observations.csv.gz
