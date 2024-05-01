@@ -12,3 +12,8 @@ The aim of this repository is to produce publication-quality figures summarizing
 3. Compiling occurrence data into a larger file, cross-referencing names using GBIF backbone
 4. Image creation using square grids
 5. Image creation using Uber's H3 hexagon mapping
+
+
+# Acknowledgements #
+
+> This material is based upon work supported by the National Science Foundation Graduate Research Fellowship under Grant No. 2236870.
