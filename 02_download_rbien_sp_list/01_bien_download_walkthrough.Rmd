@@ -1,5 +1,5 @@
 ---
-title: "Step 01: Downloading RBIEN coordinate data from the server"
+title: "Downloading RBIEN coordinate data from the server"
 author: "Alexa Tyszka"
 date: "`r Sys.Date()`"
 output: html_document
@@ -7,21 +7,23 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
 ```
 
 ## Initialization
-First, we will prepare to download all the data that we might want from a subset of species from the main BIEN database. Open the BIEN package and set up a directory where we will be storing the files.
+First, we will prepare to download all the data that we might want from a subset of species from the main BIEN database. Open the BIEN package and set up a directory where we will be storing the files. For more information on using the BIEN package, please consult [this vignette](http://cran.nexr.com/web/packages/BIEN/vignettes/BIEN_tutorial.html).
 
 
-```{r init, echo=FALSE}
+```{r init, echo=TRUE}
 #install.packages("BIEN")
 library(BIEN)
-setwd("~/atyszka2@uic.edu - Google Drive/Shared drives/walker-lab-shared-drive/preservation_review_ast/04_data_procedure_for_submission/")
+setwd("~/Documents/GitHub/preservation-review-2024/02_download_rbien_sp_list/")
 
 ```
 
 You may want multiple downloads, each of which should have a separate folder.
 ```{r dircreate, eval=FALSE}
+
 download.dir.path <- paste(Sys.Date(), "-rbien-bulk-download", sep="")
 dir.create(download.dir.path)
 setwd(download.dir.path)
@@ -31,9 +33,11 @@ getwd()
 ## Get a list of species of interest
 
 You may want to investigate a species or genus of interest. RBIEN provides many tools to investigate such questions. Or you may have a pre-existing vector of species, which you can load here. I'm investigating all species in the database, so here we get a record of all species.
-```{r getsp, eval=F}
+```{r getsp, eval=T}
 Blistall<-BIEN_list_all()
 ```
+
+
 
 ##Setting up download parameters
 
@@ -47,7 +51,7 @@ startnum <- 0 #which index we start at, could be useful if server run is interru
 
 
 ## Running the loop, and final notes
-This code was run on a lab computer running Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-39-generic x86_64), but could also be run for smaller jobs on lighter weight PCs. Adjusting ```m``` above is useful for test-runs, for example only taking 100 species initially. The ```.csv``` files will vary in size and some may be 0 bytes large, but this is just because there were no coordinate records for that species. Records may exist in other forms.
+This code was run on a lab computer running Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-39-generic x86_64). Adjusting ```m``` is useful for test runs, for example only taking 100 species initially. The ```.csv``` files will vary in size and some may be 0 bytes large, but this is just because there were no coordinate records for that species. Records may exist in other forms.
 
 ```{r serverrun, eval = FALSE, echo=T}
 ## try error handling is courtesy of https://stackoverflow.com/questions/31999808/retry-for-loop-r-loop-if-error
@@ -66,8 +70,16 @@ for (x in seq(from=startnum, to=m, by=n)) {
       break
       }
     }
-  write.csv(results, file=paste("rbien_coords_dec_14/rbien_dl_from_", x, ".csv", sep=""))
+  write.csv(results, file=paste("rbien_coords_/", x, ".csv", sep=""))
 }
 
+```
+
+As an example, we can download the range of all species within the genus *Orzya* present in the BIEN database. In this case, with only a few members of the genus, we can just use the function provided by the BIEN package.
+
+```{r oryza_example, eval=T}
+search_genus<-"Oryza"
+results <- BIEN_occurrence_genus(genus = search_genus,observation.type=T)
+write.csv(results, file=paste(search_genus, ".csv", sep=""))
 ```
 

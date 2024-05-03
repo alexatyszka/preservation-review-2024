@@ -11,9 +11,9 @@
 
 <meta name="author" content="Alexa Tyszka" />
 
-<meta name="date" content="2024-02-26" />
+<meta name="date" content="2024-05-03" />
 
-<title>Step 01: Downloading RBIEN coordinate data from the server</title>
+<title>Downloading RBIEN coordinate data from the server</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -350,10 +350,10 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">Step 01: Downloading RBIEN coordinate data
-from the server</h1>
+<h1 class="title toc-ignore">Downloading RBIEN coordinate data from the
+server</h1>
 <h4 class="author">Alexa Tyszka</h4>
-<h4 class="date">2024-02-26</h4>
+<h4 class="date">2024-05-03</h4>
 
 </div>
 
@@ -362,10 +362,15 @@ from the server</h1>
 <h2>Initialization</h2>
 <p>First, we will prepare to download all the data that we might want
 from a subset of species from the main BIEN database. Open the BIEN
-package and set up a directory where we will be storing the files.</p>
+package and set up a directory where we will be storing the files. For
+more information on using the BIEN package, please consult <a href="http://cran.nexr.com/web/packages/BIEN/vignettes/BIEN_tutorial.html">this
+vignette</a>.</p>
+<pre class="r"><code>#install.packages(&quot;BIEN&quot;)
+library(BIEN)</code></pre>
 <pre><code>## Loading required package: RPostgreSQL</code></pre>
 <pre><code>## Loading required package: DBI</code></pre>
 <pre><code>## Type vignette(&quot;BIEN&quot;) or vignette(&quot;BIEN_tutorial&quot;) to get started</code></pre>
+<pre class="r"><code>setwd(&quot;~/Documents/GitHub/preservation-review-2024/02_download_rbien_sp_list/&quot;)</code></pre>
 <p>You may want multiple downloads, each of which should have a separate
 folder.</p>
 <pre class="r"><code>download.dir.path &lt;- paste(Sys.Date(), &quot;-rbien-bulk-download&quot;, sep=&quot;&quot;)
@@ -391,9 +396,8 @@ startnum &lt;- 0 #which index we start at, could be useful if server run is inte
 <div id="running-the-loop-and-final-notes" class="section level2">
 <h2>Running the loop, and final notes</h2>
 <p>This code was run on a lab computer running Ubuntu 22.04.3 LTS
-(GNU/Linux 6.2.0-39-generic x86_64), but could also be run for smaller
-jobs on lighter weight PCs. Adjusting <code>m</code> above is useful for
-test-runs, for example only taking 100 species initially. The
+(GNU/Linux 6.2.0-39-generic x86_64). Adjusting <code>m</code> is useful
+for test runs, for example only taking 100 species initially. The
 <code>.csv</code> files will vary in size and some may be 0 bytes large,
 but this is just because there were no coordinate records for that
 species. Records may exist in other forms.</p>
@@ -413,8 +417,15 @@ for (x in seq(from=startnum, to=m, by=n)) {
       break
       }
     }
-  write.csv(results, file=paste(&quot;rbien_coords_dec_14/rbien_dl_from_&quot;, x, &quot;.csv&quot;, sep=&quot;&quot;))
+  write.csv(results, file=paste(&quot;rbien_coords_/&quot;, x, &quot;.csv&quot;, sep=&quot;&quot;))
 }</code></pre>
+<p>As an example, we can download the range of all species within the
+genus <em>Orzya</em> present in the BIEN database. In this case, with
+only a few members of the genus, we can just use the function provided
+by the BIEN package.</p>
+<pre class="r"><code>search_genus&lt;-&quot;Oryza&quot;
+results &lt;- BIEN_occurrence_genus(genus = search_genus,observation.type=T)
+write.csv(results, file=paste(search_genus, &quot;.csv&quot;, sep=&quot;&quot;))</code></pre>
 </div>
 
 
