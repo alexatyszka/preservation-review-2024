@@ -1,2 +1,5 @@
-January 31, 2023 - Searching viridiplantae in https://www.ncbi.nlm.nih.gov/sra results in RNA(438,655)
+Larger project contains all SRA data: January 31, 2023 - Searching viridiplantae in https://www.ncbi.nlm.nih.gov/sra results in RNA(438,655)
 Downloaded to runinfo.csv
+
+Example:
+Downloading all SRA results from the genus Oryza: https://www.ncbi.nlm.nih.gov/sra/?term=txid4527[Organism:exp] (Select "RNA" > "Send to:" > "File" > "RunInfo")
