@@ -5,6 +5,8 @@ The aim of this repository is to produce publication-quality figures summarizing
 
 > Maitner BS, Boyle B, Casler N, et al. The bien r package: A tool to access the Botanical Information and Ecology Network (BIEN) Database. Methods Ecol Evol. 2018; 9: 373–379. https://doi.org/10.1111/2041-210X.12861
 
+My hope is that this repository can also serve as a tutorial for downloading data from the BIEN database, working with coordinate data in R, and creating figures that display species ranges.
+
 # Outline of files included
 
 1. Obtaining a list of species of interest from the NCBI SRA
