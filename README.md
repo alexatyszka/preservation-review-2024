@@ -12,8 +12,8 @@ My hope is that this repository can also serve as a tutorial for downloading dat
 1. Obtaining a list of species of interest from the NCBI SRA
 2. Downloading species occurrences using RBIEN
 3. Compiling occurrence data into a larger file, cross-referencing names using GBIF backbone
-4. Image creation using square grids
-5. Image creation using Uber's H3 hexagon mapping
+4. Range map creation using square grids
+5. Range map creation using Uber's H3 hexagon mapping
 
 
 # Acknowledgements #
