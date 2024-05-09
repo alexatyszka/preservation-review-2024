@@ -1,11 +1,9 @@
+#Created by AST, July 5 2023; edited May 8 2024.
+#This script takes multiple smaller .csv files containing GBIF information and concatenates them into a larger .csv file, if downloading coordinates in batches.
+
 library(dplyr)
-#this file is run from the server as of jul 5 2023
-setwd("~")
-setwd("../../scratch/alexa/pres_rev_figs/01_data/rbien_dl_csvs/coords_sept20/nonzero/")
-
-file_names <- dir() #where you have your files, must have only these files in there
-
-
+setwd("~/exampledirectory")
+file_names <- dir() #where you have your files, the directory must have only these files in there
 
 r <- NULL
 input <- NULL
@@ -25,8 +23,9 @@ load_csvs <- function(infile){
   #print(input$scrubbed_species_binomial)
   #print(length(r$scrubbed_species_binomial))
 }
+
 for (i in file_names){
   load_csvs(i)
 }
 
-write.csv(r, file="../obs_compiled_rbien_oct_13.csv")
+write.csv(r, file="../obs_compiled.csv")

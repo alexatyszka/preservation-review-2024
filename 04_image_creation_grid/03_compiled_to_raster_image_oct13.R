@@ -1,3 +1,4 @@
+#Created by AST on July 6 2023
 ####housekeeping####
 library(sf)
 library(dplyr)
@@ -9,26 +10,24 @@ library(fasterize)
 library(geodata)
 library(tidyterra)
 library(scales)
-library(maptools)
-library(viridis)  # better colors for everyone
+library(viridis)  
 
 ###setup
-#this file is run from the server as of jul 6 2023
-setwd("~")
-setwd("../../scratch/alexa/pres_rev_figs/01_data/rbien_dl_csvs/coords_sept20/")
 
-dir.create("output_images_oct13")
-setwd("output_images_oct13/")
+setwd("~/Documents/GitHub/preservation-review-2024/")
+
+dir.create("04_image_creation_grid/output_oryza_example/")
+setwd("04_image_creation_grid/output_oryza_example//")
 ###create raster for whole data####
 
 #loads "r" dataframe
-results <- read.csv(file="../../species_observations_197533_species")
+  results <- read.csv(file="../../02_download_rbien_sp_list/example_output_Oryza.csv")
 #sum(duplicated((results))) #none of the results contain duplicate rows
 just_coords <- results %>% dplyr::select(latitude, longitude, scrubbed_species_binomial)
 ###remove NA values from lat/long data.
 just_coords <- just_coords[!is.na(just_coords$latitude),]
 just_coords <- just_coords[!is.na(just_coords$longitude),]
-#records are now cleaned for missing lat/long data
+#records are now cleaned for missing lat/long data - you may want to remove outliers resulting from misreported sampling location
 #species names have to be in factor format for raster
 just_coords$scrubbed_species_binomial <- as.factor(just_coords$scrubbed_species_binomial)
 ##https://gis.stackexchange.com/questions/435996/create-multiple-rasters-from-single-spatialpixeldataframe-by-unique-id
@@ -70,16 +69,18 @@ plot_rich <- function(rich, name){
   ggsave(paste(name, ".pdf", sep=""), width = 20, height = 10, units = "in")
   #https://stackoverflow.com/questions/60990276/why-does-my-plot-of-a-raster-in-r-blur-in-saved-file
 }
-plot_rich(rich_whole, "richness_whole_data_4_lat_oct_13")
-plot_rich(rich_whole_lat_1, "richness_whole_data_1_lat_oct_13")
+plot_rich(rich_whole, "richness_whole_orzya_example_4")
+plot_rich(rich_whole_lat_1, "richness_whole_orzya_example_1")
 
 
 #####create raster for sra data####
 ##loads "compiled_results" dataframe
-uniq <- read.csv(file="checked_sra_names_in_results_oct_16.csv")
-
-latlong_only_sra <- results[results$scrubbed_species_binomial %in% uniq$x,]
-#length(unique(latlong_only_sra$scrubbed_species_binomial))
+#uniq <- read.csv(file="../../03_compile_species_observations/output_orzya_example_checked_sra_names_in_results.csv") #if starting with species list
+#latlong_only_sra <- results[results$scrubbed_species_binomial %in% uniq$x,]
+#length(unique(latlong_only_sra$scrubbed_species_binomial)) 
+latlong_only_sra <-read.csv(file="../../03_compile_species_observations/output_orzya_example_checked_sra_names_in_results.csv")
+colnames(latlong_only_sra)
+colnames(latlong_only_sra)[4] <- "scrubbed_species_binomial"
 sra_just_coords <- latlong_only_sra %>% dplyr::select(latitude, longitude, scrubbed_species_binomial)
 ###remove NA values.
 sra_just_coords <- sra_just_coords[!is.na(sra_just_coords$latitude),]
@@ -105,12 +106,12 @@ rich_just_sra_1 <- rasterize(sra_sp, r_1, "scrubbed_species_binomial", function(
 ##
 #####plotting####
 
-plot_rich(rich_just_sra_4, "rich_just_sra_4_oct_16")
-plot_rich(rich_just_sra_1, "rich_just_sra_1_oct_16")
+plot_rich(rich_just_sra_4, "rich_just_sra_4")
+plot_rich(rich_just_sra_1, "rich_just_sra_1")
 
 #manipulation: https://rspatial.org/spatial/8-rastermanip.html
 
-#######manipulation#####
+#######manipulation, percent completion#####
 
 s <- rich_just_sra_4
 s[is.na(s)] <- 0
@@ -129,15 +130,15 @@ ggplot(w) +
   )+
   geom_spatvector(data = wrld, fill=NA)+
   labs(
-    fill = "Completeness of species"
+    fill = "Completeness of sampling in SRA"
   )
 
-ggsave(paste("adj_rich_oct_16", ".pdf", sep=""), width = 20, height = 10, units = "in")
+ggsave(paste("percent_completion", ".pdf", sep=""), width = 20, height = 10, units = "in")
 
 
-#save for external manip
-writeRaster(rich_whole, file="rich_whole_4.tif")
-writeRaster(rich_just_sra_1, file="rich_just_sra_1.tif")
-writeRaster(rich_just_sra_4, file="rich_just_sra_4.tif")
-writeRaster(rich_whole_lat_1, file="rich_whole_1.tif")
-writeRaster(w, file="adj_rich_4.tif")
+#save for external manipulation if desired
+#writeRaster(rich_whole, file="rich_whole_4.tif")
+#writeRaster(rich_just_sra_1, file="rich_just_sra_1.tif")
+#writeRaster(rich_just_sra_4, file="rich_just_sra_4.tif")
+#writeRaster(rich_whole_lat_1, file="rich_whole_1.tif")
+#writeRaster(w, file="adj_rich_4.tif")
