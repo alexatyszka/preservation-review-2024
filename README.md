@@ -33,3 +33,33 @@ Citations for all packages and software used to collect and analyze data
 > Hadley Wickham, Romain François, Lionel Henry, Kirill Müller and Davis Vaughan (2023). dplyr: A Grammar of Data Manipulation. R package version 1.1.4. https://CRAN.R-project.org/package=dplyr
 
 > Chamberlain S, Barve V, Mcglinn D, Oldoni D, Desmet P, Geffert L, Ram K (2024). _rgbif: Interface to the Global Biodiversity Information Facility API_. R package version 3.8.1, <URL: https://CRAN.R-project.org/package=rgbif>.
+<!--- library(sf)
+library(dplyr)
+library(ggplot2)
+library(h3jsr)
+library(sp)
+library(terra)
+library(raster)
+library(fasterize)
+library(geodata)
+library(tidyterra)
+library(scales)
+#library(maptools) #error
+library(viridis)
+library(svglite)
+
+library(sf)
+library(dplyr)
+library(ggplot2)
+library(h3jsr)
+library(sp)
+library(terra)
+library(raster)
+library(fasterize)
+library(geodata)
+library(tidyterra)
+library(scales)
+#library(maptools) #error
+library(viridis)
+library(svglite)
+-->
